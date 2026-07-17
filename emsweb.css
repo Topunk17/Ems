@@ -1,0 +1,995 @@
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- GLOBAL BACKGROUND (TEMA MEDIS) --- */
+        body {
+            background-color: #fff1f2;
+            background-image: 
+                radial-gradient(#fda4af 1px, transparent 1px),
+                radial-gradient(#fda4af 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,228,230,0.4) 100%);
+            z-index: -1;
+        }
+
+        /* =========================================
+           STYLE UNTUK HALAMAN LOGIN
+           ========================================= */
+        #view-login {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            z-index: 1;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid #ffe4e6;
+            border-radius: 20px;
+            padding: 30px 24px;
+            box-shadow: 0 20px 40px rgba(225, 29, 72, 0.15);
+            text-align: center;
+        }
+
+        .card-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #9f1239;
+            text-transform: uppercase;
+            border-bottom: 1px dashed #fecdd3;
+            padding-bottom: 10px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            animation: pulse-green 1.5s infinite;
+        }
+
+        .logo-wrapper {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #111;
+            border: 3px solid #e11d48;
+            box-shadow: 0 0 20px rgba(225, 29, 72, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-ring 2s infinite;
+        }
+
+        .moving-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .login-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: #881337;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .login-subtitle {
+            font-size: 12px;
+            font-weight: 600;
+            color: #f43f5e;
+            margin-bottom: 30px;
+            background-color: #fff1f2;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #ffe4e6;
+        }
+
+        .btn-discord {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 8px 15px rgba(88, 101, 242, 0.3);
+            transition: all 0.3s ease;
+            gap: 12px;
+        }
+
+        .btn-discord:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(88, 101, 242, 0.4);
+        }
+
+        .discord-icon {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        .security-notice {
+            margin-top: 24px;
+            font-size: 11px;
+            color: #9f1239;
+            line-height: 1.6;
+            background-color: #fff1f2;
+            padding: 14px;
+            border-radius: 10px;
+            border-left: 4px solid #e11d48;
+            text-align: left;
+        }
+
+        /* =========================================
+           STYLE UNTUK HALAMAN DASHBOARD & LOKET
+           ========================================= */
+        /* Class umum untuk wadah mobile */
+        .app-view {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(225, 29, 72, 0.1);
+            display: none; /* Sembunyikan semua awalnya kecuali yg dipanggil JS */
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: #ffffff;
+            border-bottom: 2px solid #ffe4e6;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo {
+            width: 36px;
+            height: 36px;
+            background-color: #e11d48;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        .header-title h1 {
+            font-size: 14px;
+            font-weight: 800;
+            color: #881337;
+            text-transform: uppercase;
+        }
+
+        .header-title p {
+            font-size: 10px;
+            font-weight: 600;
+            color: #f43f5e;
+        }
+
+        .discord-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid #5865F2;
+            padding: 2px;
+            background-color: white;
+        }
+
+        .discord-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .content-area {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Bio Data Card */
+        .bio-card {
+            background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 15px rgba(225, 29, 72, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bio-card::after {
+            content: '+';
+            position: absolute;
+            right: -10px;
+            bottom: -20px;
+            font-size: 100px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+            line-height: 1;
+        }
+
+        .bio-label {
+            font-size: 10px;
+            color: #fecdd3;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .ic-name {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .bio-details {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .bio-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bio-val {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Announcement Card */
+        .announcement-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 16px;
+            border-left: 5px solid #fbbf24;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .announcement-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .announcement-icon {
+            background-color: #fef3c7;
+            color: #d97706;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .announcement-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #1a202c;
+            text-transform: uppercase;
+        }
+
+        .announcement-content {
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.5;
+            background-color: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Menu Grid */
+        .section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #881337;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .menu-item {
+            background-color: #ffffff;
+            border: 1px solid #ffe4e6;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+            color: #1a202c;
+            box-shadow: 0 4px 6px rgba(225, 29, 72, 0.05);
+            transition: all 0.2s ease;
+            min-height: 100px;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(225, 29, 72, 0.15);
+            border-color: #f43f5e;
+        }
+
+        .menu-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .menu-text {
+            font-size: 12px;
+            font-weight: 700;
+            color: #881337;
+        }
+
+        /* =========================================
+           STYLE KHUSUS HALAMAN LOKET
+           ========================================= */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #e11d48;
+            text-decoration: none;
+            margin-bottom: 20px;
+            background-color: #fff1f2;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #fecdd3;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #ffe4e6;
+            transform: translateX(-2px);
+        }
+
+        .loket-card {
+            background-color: #ffffff;
+            border: 1px solid #ffe4e6;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(225, 29, 72, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .loket-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .loket-icon {
+            font-size: 24px;
+            background-color: #fff1f2;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .loket-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1a202c;
+        }
+
+        .loket-desc {
+            font-size: 11px;
+            color: #718096;
+            line-height: 1.4;
+            margin-left: 52px; /* Sejajar dengan teks judul */
+        }
+
+        .btn-loket {
+            margin-left: 52px;
+            background-color: #e11d48;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            align-self: flex-start;
+            transition: background-color 0.2s;
+        }
+
+        .btn-loket:hover {
+            background-color: #be123c;
+        }
+
+        /* Keyframes Animasi */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); }
+            100% { box-shadow: 0 0 0 15px rgba(225, 29, 72, 0); }
+        }
+        /* =========================
+   BOX TABEL ABSEN
+   ========================= */
+
+.absen-box{
+    background:#ffffff;
+    border:2px solid #e11d48;
+    border-radius:18px;
+    padding:18px;
+    margin:15px 0;
+    box-shadow:0 8px 20px rgba(225,29,72,.12);
+}
+
+.absen-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.absen-table td{
+    padding:18px;
+    text-align:center;
+    font-size:17px;
+    font-weight:800;
+    color:#881337;
+    background:#fff7f8;
+    border:1px solid #fecdd3;
+    border-radius:12px;
+}
+.form-row{
+    display:flex;
+    gap:15px;
+}
+
+.form-row .form-group{
+    flex:1;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-label{
+    display:block;
+    margin-bottom:6px;
+    font-size:12px;
+    font-weight:700;
+    color:#7f1d1d;
+    text-transform:uppercase;
+}
+
+.form-input,
+.form-textarea{
+    width:100%;
+    padding:13px 15px;
+    border:2px solid #fecaca;
+    border-radius:12px;
+    background:#fff;
+    font-size:14px;
+    transition:.25s;
+    outline:none;
+}
+
+.form-input:focus,
+.form-textarea:focus{
+    border-color:#dc2626;
+    box-shadow:0 0 0 4px rgba(220,38,38,.15);
+}
+
+.form-textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.form-submit{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#16a34a,#059669);
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    margin-top:8px;
+    transition:.25s;
+}
+
+.form-submit:hover{
+    transform:translateY(-2px);
+}
+
+.btn-back-full{
+    width:100%;
+    margin-top:12px;
+    padding:14px;
+    border:2px solid #fecaca;
+    border-radius:12px;
+    background:#fff5f5;
+    color:#b91c1c;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.btn-back-full:hover{
+    background:#fee2e2;
+}
+.form-title-box{
+    width:100%;
+    background:linear-gradient(135deg,#dc2626,#991b1b);
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:20px;
+    box-shadow:0 6px 16px rgba(220,38,38,.25);
+}
+
+.form-title{
+    color:#fff;
+    font-size:22px;
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.form-subtitle{
+    color:rgba(255,255,255,.9);
+    font-size:13px;
+    line-height:1.5;
+}
+.section-box{
+    width:100%;
+    background:linear-gradient(135deg,#dc2626,#991b1b);
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:20px;
+    box-shadow:0 6px 16px rgba(220,38,38,.25);
+}
+
+.section-subtitle{
+    color:rgba(255,255,255,.9);
+    font-size:13px;
+    line-height:1.5;
+    margin-bottom:16px;
+}
+
+.absen-box{
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.absen-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.absen-table td{
+    padding:16px;
+    text-align:center;
+    font-size:16px;
+    font-weight:700;
+    color:#991b1b;
+    border:2px solid #fecaca;
+}
+.form-box{
+    width:100%;
+    max-width:420px;
+    background:#ffffff;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 12px 30px rgba(220,38,38,.18);
+    border:2px solid #fecaca;
+    overflow-y:auto;
+    max-height:90vh;
+}
+
+.full-grid{
+    grid-column:1/-1;
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+}
+/* --- CSS BARU (NAMESPACE: ADMIN) --- */
+.admin-view {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    max-width: 430px;
+    padding: 20px;
+}
+
+.admin-card-modern {
+    background: #ffffff;
+    border: 2px solid #e11d48;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 5px 5px 0px #e11d48;
+}
+
+.admin-btn-modern {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #881337;
+    color: white;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+}
+
+.admin-action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-approve { background: #10b981; color: white; padding: 10px; border-radius: 8px; border: none; flex: 1; font-weight: 700; }
+.btn-reject { background: #e11d48; color: white; padding: 10px; border-radius: 8px; border: none; flex: 1; font-weight: 700; }
+/* Hapus tanda } yang ada di sini jika ada */
+
+
+    
+    /* GANTI CSS INPUT ANDA DENGAN INI AGAR SESUAI TEMA PINK */
+.input-container { 
+    margin: 20px 0; 
+    text-align: left; 
+}
+
+.input-container label { 
+    display: block; 
+    color: #881337; /* Warna merah tua sesuai tema */
+    font-size: 0.8em; 
+    font-weight: 700;
+    margin-bottom: 5px; 
+}
+
+.input-container input { 
+    width: 100%; 
+    padding: 12px; 
+    background: #ffffff; /* Putih bersih */
+    border: 2px solid #ffe4e6; /* Border pink muda */
+    border-radius: 12px; 
+    color: #1a202c; 
+    box-sizing: border-box; 
+    transition: 0.3s;
+}
+
+.input-container input:focus {
+    border-color: #e11d48; /* Border merah saat diklik */
+    outline: none;
+}
+
+.toggle-link { 
+    margin-top: 15px; 
+    font-size: 0.85em; 
+    color: #e11d48; 
+    cursor: pointer; 
+    text-decoration: underline; 
+    font-weight: 600;
+}
+
+.btn-discord { 
+    display: block; 
+    margin-top: 20px; 
+    padding: 14px; 
+    background: #e11d48; /* Warna merah sesuai tema */
+    color: white; 
+    text-align: center; 
+    text-decoration: none; 
+    border-radius: 12px; 
+    font-weight: 800; 
+    border: none;
+}
+/* --- TAMBAHAN DARI JAVASCRIPT SEBELUMNYA --- */
+.input-group { 
+    margin-bottom: 15px; 
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #444;
+    color: white;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #2ecc71;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+/* =========================================
+   STYLE UNTUK POP-UP FORM (OVERLAY)
+   ========================================= */
+.overlay-ui {
+    display: none; /* Sembunyikan form secara default */
+    position: fixed; /* Membuatnya melayang di atas layar */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65); /* Efek gelap transparan di background */
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    backdrop-filter: blur(5px);
+}
+
+/* Memastikan kotak form di dalam overlay posisinya di tengah */
+.overlay-ui .form-box {
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto; /* Bisa di-scroll jika formnya panjang */
+    margin: 0 auto;
+}
+/* =========================================
+   STYLE NOTIFIKASI UI (TOAST)
+   ========================================= */
+.notification-ui {
+    visibility: hidden;
+    min-width: 250px;
+    max-width: 80%;
+    color: #fff;
+    text-align: center;
+    border-radius: 12px;
+    padding: 16px 20px;
+    position: fixed;
+    z-index: 9999; /* Pastikan selalu berada di paling atas */
+    left: 50%;
+    top: 20px;
+    transform: translateX(-50%);
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: opacity 0.4s ease, top 0.4s ease;
+}
+
+/* Animasi saat notifikasi muncul */
+.notification-ui.show {
+    visibility: visible;
+    opacity: 1;
+    top: 40px;
+}
+
+/* Warna Hijau untuk notifikasi Berhasil/Sukses */
+.notif-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: 2px solid #34d399;
+}
+
+/* Warna Merah untuk notifikasi Error/Gagal */
+.notif-error {
+    background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%);
+    border: 2px solid #fb7185;
+}
+/* Styling List Request Admin */
+/* ============================================== */
+/* CSS UTAMA UNTUK REQUEST CARD ADMIN PANEL       */
+/* ============================================== */
+
+.request-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efek sedikit terangkat saat kartu diarahkan kursor */
+.request-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+/* Area Informasi Konten */
+.req-info {
+    width: 100%;
+    color: #1f2937;
+    font-family: inherit;
+}
+
+/* Detail teks di dalam informasi */
+.req-info strong {
+    color: #374151;
+}
+
+/* Gambar/Foto bukti yang diupload dari Supabase Storage */
+.req-info img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px solid #e5e7eb;
+    display: block;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.req-info img:hover {
+    opacity: 0.9;
+}
+
+/* Area Tombol Aksi (Terima / Tolak) */
+.req-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 100%;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 12px;
+    margin-top: 12px;
+}
+
+/* Pengaturan Dasar Tombol Admin */
+.req-actions button {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+/* Tombol Terima / ACC (Hijau Emerald) */
+.req-actions .btn-acc {
+    background: #10b981;
+    color: white;
+}
+
+.req-actions .btn-acc:hover {
+    background: #059669;
+}
+
+.req-actions .btn-acc:active {
+    transform: scale(0.98);
+}
+
+/* Tombol Tolak / Reject (Merah Rose) */
+.req-actions .btn-rej {
+    background: #ef4444;
+    color: white;
+}
+
+.req-actions .btn-rej:hover {
+    background: #dc2626;
+}
+
+.req-actions .btn-rej:active {
+    transform: scale(0.98);
+}
+
+/* Kontainer pembungkus utama agar ada jarak yang rapi */
+#absen-list-container,
+#medis-list-container,
+#izin-list-container,
+#akun-list-container {
+    padding: 5px 0;
+    width: 100%;
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 85%;
+    border-radius: 0.35rem;
+    color: white;
+}
+.badge-secondary { background-color: #858796; } /* Abu-abu */
+.badge-warning { background-color: #f6c23e; color: #000; } /* Kuning */
+.badge-success { background-color: #1cc88a; } /* Hijau */
+.badge-danger { background-color: #e74a3b; } /* Merah */
+.badge-dark-success { background-color: #0f6674; } /* Hijau Tua */
+

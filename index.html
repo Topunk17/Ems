@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMS Terminal - Mayday</title>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+    
+    <link rel="stylesheet" href="emsweb.css">
+</head>
+<body>
+
+<div id="view-login">
+    <div class="login-card">
+        <div class="card-status-bar">
+            <span>EMS PANEL v1.0</span>
+            <div class="status-indicator">
+                <div class="pulse-dot"></div>
+                System Ready
+            </div>
+        </div>
+
+        <div id="login-form">
+            <div class="logo-wrapper">
+                <video class="moving-logo" autoplay loop muted playsinline>
+                    <source src="gemini_generated_video_171d3c52.mp4" type="video/mp4">
+                </video>
+            </div>
+            
+            <h1 class="login-title" id="title">Mayday EMS</h1>
+            <p class="login-subtitle" id="subtitle">Medical Services Terminal</p>
+
+            <div class="input-container">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Masukkan username">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="********">
+            </div>
+
+            <a href="#" class="btn-discord" onclick="masukDashboard(event)">Login Sekarang</a>
+            
+            <p class="toggle-link" onclick="toggleAuth()">Belum punya akun? Daftar disini</p>
+        </div>
+
+        <div id="register-form" style="display:none;">
+            <h1 class="login-title">Registrasi</h1>
+            <p class="login-subtitle">Pendaftaran Personel Baru</p>
+
+            <div class="input-container">
+                <label>Username</label>
+                <input type="text" id="reg-username" placeholder="Username UCP">
+                <label>Nama Character</label>
+                <input type="text" id="reg-nama" placeholder="Nama In-Character">
+                <label>Password</label>
+                <input type="password" id="reg-password" placeholder="********">
+            </div>
+
+            <a href="#" class="btn-discord" onclick="register(event)">Daftar Sekarang</a>
+            
+            <p class="toggle-link" onclick="toggleAuth()">Sudah punya akun? Login disini</p>
+        </div>
+
+        <div class="security-notice">
+            <strong>AKSES MEDIS TERBATAS</strong><br>
+            Login hanya diizinkan untuk personel EMS yang terverifikasi.
+        </div>
+    </div>
+</div>
+
+<div id="view-dashboard" class="app-view">
+    <header>
+        <div class="header-brand">
+            <div class="header-logo">M</div>
+            <div class="header-title">
+                <h1>Mayday Terminal</h1>
+                <p>Medical Services</p>
+            </div>
+        </div>
+        <div class="discord-avatar">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Medic" alt="Discord Avatar">
+        </div>
+    </header>
+
+    <div class="content-area">
+        <div class="bio-card">
+            <div class="bio-label">Identitas In-Character</div>
+            <div class="ic-name" id="dash-nama">Memuat Data...</div>
+            <div class="bio-label" id="dash-jabatan" style="margin-top:-10px; margin-bottom:10px;">Memuat Jabatan...</div>
+            
+            <div class="bio-details">
+                <div class="bio-col">
+                    <span class="bio-label">Pendapatan Gaji</span>
+                    <span class="bio-val" id="dash-gaji">Rp 0</span>
+                </div>
+                <div class="bio-col" style="text-align: right;">
+                    <span class="bio-label">Last Login</span>
+                    <span class="bio-val" id="dash-login">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="announcement-header">
+                <div class="announcement-icon">📢</div>
+                <div class="announcement-title">Pengumuman IC</div>
+            </div>
+            <div class="announcement-content">
+                <strong>Kepada Seluruh Staff EMS:</strong><br>
+                Diwajibkan menghadiri briefing pada hari Sabtu pukul 20:00 untuk update SOP penanganan trauma medis terbaru.
+            </div>
+        </div>
+
+        <div class="section-title">Action Menu</div>
+        <div class="menu-grid">
+            <a href="#" class="menu-item staff-only" id="menu-logs" onclick="show('view-logs')" style="display:none;">
+                <div class="menu-icon">📂</div>
+                <div class="menu-text">Logs Berangkas EMS</div>
+            </a>
+
+            <a href="#" class="menu-item staff-only" id="menu-gaji" onclick="show('view-pilih-gaji')">
+                <div class="menu-icon">💰</div>
+                <div class="menu-text">LIVE UPDATE GAJI & PENARIKAN</div>
+            </a>
+
+            <a href="#" class="menu-item staff-only" id="menu-panduan">
+                <div class="menu-icon">📖</div>
+                <div class="menu-text">Buku Panduan Medis</div>
+            </a>
+
+            <a href="#" class="menu-item staff-only" id="menu-absen" onclick="show('view-absen')">
+                <div class="menu-icon">⏱️</div>
+                <div class="menu-text">Absensi & Laporan Shift</div>
+            </a>
+
+            <a href="#" class="menu-item staff-only" id="menu-rekam-medis" onclick="show('view-rekam-medis')" style="display:none;">
+               <div class="menu-icon">🩺</div>
+               <div class="menu-text">Rekam Medis Warga</div>
+            </a>
+
+            <a href="#" class="menu-item staff-only" id="menu-cuti" onclick="show('view-cuti')">
+                <div class="menu-icon">🗓️</div>
+                <div class="menu-text">Izin Cuti</div>
+            </a>
+
+            <a href="#" class="menu-item staff-only" id="menu-admin-panel" onclick="show('view-admin'); return false;" style="display:none;">
+                <div class="menu-icon">⚙️</div>
+                <div class="menu-text">ADMIN PANEL</div>
+            </a>
+        </div> 
+    </div> 
+</div>
+
+<div id="view-logs" class="app-view">
+    <header>
+        <div class="header-brand">
+            <div class="header-logo">M</div>
+            <div class="header-title">
+                <h1>Mayday Terminal</h1>
+                <p>Logs Berangkas</p>
+            </div>
+        </div>
+        <div class="discord-avatar">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Medic" alt="Discord Avatar">
+        </div>
+    </header>
+
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('view-dashboard')">Kembali</a>
+
+        <div class="section-title">Pusat Logs Berangkas EMS</div>
+
+        <div class="loket-card">
+            <div class="loket-header">
+                <div class="loket-icon">💵</div>
+                <div class="loket-title">Logs Keuangan</div>
+            </div>
+            <div class="loket-desc">
+                Melihat riwayat transaksi keuangan pada brangkas instansi.
+            </div>
+            <button class="btn-loket">Buka Logs</button>
+        </div>
+
+        <div class="loket-card">
+            <div class="loket-header">
+                <div class="loket-icon">💊</div>
+                <div class="loket-title">Logs Obat-obatan</div>
+            </div>
+            <div class="loket-desc">
+                Melihat riwayat stok obat-obatan instansi EMS.
+            </div>
+            <button class="btn-loket">Buka Logs</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- HALAMAN PERANTARA ABSEN -->
+<!-- ============================================== -->
+<div id="view-absen" class="app-view overlay-ui">
+    <div class="card" style="width:100%; max-width:400px; background:#fff; padding:20px; border-radius:15px;">
+        <div class="section-title">Absen Duty</div>
+        <div class="section-box">
+            <div class="section-title">ABSEN DUTY</div>
+            <div class="section-subtitle">
+                Pilih menu di bawah untuk mengisi formulir absensi On Duty maupun Off Duty.
+            </div>
+
+            <div class="absen-box">
+                <table class="absen-table">
+                    <tr>
+                        <td>⏰ ABSEN ON DUTY & OFF DUTY</td>
+                    </tr>
+                </table>
+            </div>
+            <button class="btn-loket" style="width:100%; margin-left:0;" onclick="bukaFormAbsen()">ISI FORMAT ABSEN</button>
+            <button class="btn-back" style="width:100%; margin-left:0; margin-top:10px;" onclick="show('view-dashboard')">KEMBALI</button>
+        </div>
+    </div>
+</div>
+
+<!-- FORM POP-UP ABSEN -->
+<div id="form-absen-ui" class="overlay-ui" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;">
+    <div class="form-box" style="background:#fff; width:100%; max-width:400px; padding:25px; border-radius:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+        
+        <div class="form-title-box" style="margin-bottom: 20px;">
+            <div class="form-title" style="font-size: 22px; font-weight: bold; color: #333;">FORMULIR ABSEN</div>
+            <div class="form-subtitle" style="font-size: 13px; color: #666;">Lengkapi waktu On/Off Duty & foto bukti.</div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label class="form-label" style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">WAKTU ON DUTY</label>
+            <input class="form-input" type="time" id="on-duty" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label class="form-label" style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">WAKTU OFF DUTY</label>
+            <input class="form-input" type="time" id="off-duty" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">UPLOAD 2 FOTO BUKTI</label>
+            <input class="form-input" type="file" id="foto-bukti" multiple accept="image/*" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+        </div>
+
+        <button class="form-submit" onclick="submitAbsen()" style="width:100%; padding:12px; background:#2563eb; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; margin-bottom:10px;">
+            KIRIM ABSEN
+        </button>
+
+        <button class="btn-back-full" onclick="tutupFormAbsen()" style="width:100%; padding:12px; background:#e11d48; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">
+            BATAL
+        </button>
+    </div>
+</div>
+
+<div id="notif-ui" class="notification-ui"></div>
+
+<!-- ============================================== -->
+<!-- PILIH MENU GAJI -->
+<!-- ============================================== -->
+<div id="view-pilih-gaji" class="app-view" style="display:none;">
+    <div class="content-area">
+
+        <a href="#" class="btn-back" onclick="show('view-dashboard')">Kembali</a>
+
+        <div class="section-title">
+            💳 MENU PAYROLL
+        </div>
+
+        <div class="loket-card">
+            <div class="loket-header">
+                <div class="loket-icon">📈</div>
+                <div class="loket-title">Live Update Gaji</div>
+            </div>
+
+            <div class="loket-desc">
+                Menampilkan estimasi gaji minggu berjalan secara real-time berdasarkan absensi yang telah dilakukan.
+            </div>
+
+            <button class="btn-loket"
+                onclick="loadGajiMingguIni(); show('view-live-gaji');">
+                Buka Live Payroll
+            </button>
+        </div>
+
+        <div class="loket-card">
+            <div class="loket-header">
+                <div class="loket-icon">🏧</div>
+                <div class="loket-title">Penarikan Gaji</div>
+            </div>
+
+            <div class="loket-desc">
+                Mengajukan pencairan payroll minggu sebelumnya yang telah dikunci oleh sistem.
+            </div>
+
+            <button class="btn-loket"
+                onclick="bukaMenuPenarikanGaji();">
+                Buka Penarikan
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- HALAMAN PENARIKAN GAJI V2 (BARU) -->
+<!-- ============================================== -->
+<div id="view-penarikan-gaji-v2" class="app-view" style="display:none;">
+    <header>
+        <div class="header-brand">
+            <div class="header-logo">M</div>
+            <div class="header-title">
+                <h1>Mayday Terminal</h1>
+                <p>Penarikan Gaji</p>
+            </div>
+        </div>
+        <div class="discord-avatar">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Medic" alt="Discord Avatar">
+        </div>
+    </header>
+
+    <div class="content-area" id="penarikan-gaji-content">
+        <!-- Content akan di-render dari payroll-ui.js -->
+        <p style="text-align: center; color: #9CA3AF;">Memuat data payroll...</p>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- HALAMAN IZIN CUTI -->
+<!-- ============================================== -->
+<div id="view-cuti" class="overlay-ui" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;">
+    <div class="form-box" style="background:#fff; width:100%; max-width:400px; padding:25px; border-radius:20px;">
+        <div class="form-title-box" style="margin-bottom: 20px;">
+            <div class="form-title" style="font-size: 22px; font-weight: bold;">FORMULIR IZIN CUTI</div>
+            <div class="form-subtitle">Lengkapi tanggal dan alasan cuti.</div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label class="form-label">TANGGAL MULAI</label>
+            <input type="date" class="form-input" id="tgl-mulai-cuti" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label class="form-label">TANGGAL SELESAI</label>
+            <input type="date" class="form-input" id="tgl-selesai-cuti" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label">ALASAN CUTI</label>
+            <textarea class="form-textarea" id="alasan-cuti" placeholder="Masukkan alasan..." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></textarea>
+        </div>
+
+        <button class="form-submit" onclick="submitIzin()" style="width:100%; padding:12px; background:#2563eb; color:#fff; border:none; border-radius:10px; margin-bottom:10px;">AJUKAN CUTI</button>
+        <button class="btn-back-full" onclick="show('view-dashboard')" style="width:100%; padding:12px; background:#e11d48; color:#fff; border:none; border-radius:10px;">KEMBALI</button>
+    </div>
+</div>
+
+
+<!-- ============================================== -->
+<!-- HALAMAN PERANTARA REKAM MEDIS (BARU) -->
+<!-- ============================================== -->
+<div id="view-rekam-medis" class="app-view overlay-ui" style="display:none;">
+    <div class="card" style="width:100%; max-width:400px; background:#fff; padding:20px; border-radius:15px;">
+        <div class="section-title">Rekam Medis</div>
+        <div class="section-box">
+            <div class="section-title">REKAM MEDIS WARGA</div>
+            <div class="section-subtitle">
+                Pilih menu di bawah untuk mengisi formulir tindakan rekam medis pasien.
+            </div>
+
+            <div class="absen-box">
+                <table class="absen-table">
+                    <tr>
+                        <td>🩺 FORMULIR REKAM MEDIS</td>
+                    </tr>
+                </table>
+            </div>
+            <button class="btn-loket" style="width:100%; margin-left:0;" onclick="bukaFormRekamMedis()">ISI REKAM MEDIS</button>
+            <button class="btn-back" style="width:100%; margin-left:0; margin-top:10px;" onclick="show('view-dashboard')">KEMBALI</button>
+        </div>
+    </div>
+</div>
+
+<!-- FORM POP-UP REKAM MEDIS (BARU) -->
+<div id="form-rekam-medis-ui" class="overlay-ui" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;">
+    <div class="form-box" style="background:#fff; width:100%; max-width:400px; padding:25px; border-radius:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+        <div class="form-title-box" style="margin-bottom: 20px;">
+            <div class="form-title" style="font-size: 22px; font-weight: bold;">REKAM MEDIS WARGA</div>
+            <div class="form-subtitle">Isi data tindakan medis & upload 3 foto.</div>
+        </div>
+
+        <div class="form-group"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">NAMA PENDAMPING</label><input type="text" class="form-input" id="medis-pendamping" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">JABATAN</label><input type="text" class="form-input" id="medis-jabatan" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">CODE PARAMEDIS</label><input type="text" class="form-input" id="medis-code" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">JENIS LUKA</label><input type="text" class="form-input" id="medis-jenis-luka" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">TINDAKAN OPERASI</label><input type="text" class="form-input" id="medis-tindakan" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">HASIL OPERASI</label><input type="text" class="form-input" id="medis-hasil" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">TANGGAL OPERASI</label><input type="date" class="form-input" id="medis-tanggal" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">JAM MULAI</label><input type="time" class="form-input" id="medis-jam-mulai" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">JAM SELESAI</label><input type="time" class="form-input" id="medis-jam-selesai" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        <div class="form-group" style="margin-top:10px;"><label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">DURASI OPERASI</label><input type="text" class="form-input" id="medis-durasi" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;"></div>
+        
+        <div class="form-group" style="margin: 15px 0;">
+            <label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">UPLOAD 3 FOTO BUKTI</label>
+     
+             <input class="form-input" type="file" id="rekam-medis" multiple accept="image/*">
+            
+        <button class="form-submit" onclick="submitmedis()" style="width:100%; padding:12px; background:#2563eb; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:15px;">
+            KIRIM REKAM MEDIS
+        </button>
+        <button class="btn-back-full" onclick="tutupFormRekamMedis()" style="width:100%; padding:12px; background:#e11d48; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:10px;">
+            BATAL
+        </button>
+    </div>
+</div>
+</div>
+
+<!-- ============================================== -->
+<!-- ADMIN PANEL -->
+<!-- ============================================== -->
+<div id="view-admin" class="app-view" style="display:none;">
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('view-dashboard'); return false;">Kembali</a>
+        <div class="section-title">⚙️ ADMIN PANEL</div>
+
+        <div class="loket-card">
+            <div class="loket-header">
+                <div class="loket-icon">📥</div>
+                <div class="loket-title">Request Pengajuan</div>
+            </div>
+            <div class="loket-desc">
+                Kelola seluruh pengajuan anggota seperti absensi, rekam medis, izin cuti, dan pendaftaran akun baru.
+            </div>
+            <button class="btn-loket" onclick="show('admin-acc'); return false;">Buka Menu</button>
+        </div>
+
+        <div class="loket-card">
+            <div class="loket-header">
+                <div class="loket-icon">💰</div>
+                <div class="loket-title">Payroll & Penarikan</div>
+            </div>
+            <div class="loket-desc">
+                Kelola pengajuan penarikan gaji dari anggota.
+            </div>
+            <button class="btn-loket" onclick="show('admin-payroll'); loadPengajuanGajiAdmin(); return false;">Buka Menu</button>
+        </div>
+
+        <div class="loket-card">
+            <div class="loket-header">
+                <div class="loket-icon">👥</div>
+                <div class="loket-title">Set Anggota</div>
+            </div>
+            <div class="loket-desc">
+                Mengubah jabatan serta nominal gaji anggota EMS.
+            </div>
+            <button class="btn-loket" onclick="show('admin-set'); return false;">Buka Menu</button>
+        </div>
+
+        <div class="loket-card">
+            <div class="loket-header">
+                <div class="loket-icon">⚠️</div>
+                <div class="loket-title">Pemberian SP</div>
+            </div>
+            <div class="loket-desc">
+                Memberikan Surat Peringatan (SP) kepada anggota yang melakukan pelanggaran.
+            </div>
+            <button class="btn-loket" onclick="show('admin-sp'); return false;">Buka Menu</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- ADMIN PAYROLL PANEL (BARU) -->
+<!-- ============================================== -->
+<div id="admin-payroll" class="app-view" style="display:none;">
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('view-admin'); return false;">🔙 Kembali</a>
+        <div class="section-title">💰 PENGAJUAN PENARIKAN GAJI</div>
+        
+        <div id="admin-pengajuan-gaji-table" style="margin-top: 20px;">
+            <!-- Data akan di-render dari payroll-ui.js -->
+            <p style="text-align: center; color: #9CA3AF;">Memuat data pengajuan...</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MENU UTAMA PERANTARA REQUEST -->
+<!-- ============================================== -->
+<div id="admin-acc" class="app-view" style="display:none;">
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('view-admin'); return false;">🔙 Kembali</a>
+        <div class="section-title">📥 Request Pengajuan</div>
+        
+        <div class="menu-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom:20px;">
+           <button class="btn-loket" style="margin:0; padding: 15px;" onclick="show('view-request-absen'); return false;">🕒 ABSEN</button>
+           <button class="btn-loket" style="margin:0; padding: 15px;" onclick="show('view-request-medis'); return false;">🩺 MEDIS</button>
+           <button class="btn-loket" style="margin:0; padding: 15px;" onclick="show('view-request-izin'); return false;">📅 IZIN</button>
+           <button class="btn-loket" style="margin:0; padding: 15px;" onclick="show('view-request-akun'); return false;">👤 AKUN</button>
+        </div>
+
+        <div class="loket-card">
+            <div class="loket-desc" style="margin-left:0; text-align:center;">
+                Pilih salah satu kategori menu di atas untuk memproses antrean data dari database.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- DETAIL SUB-MENU REQUEST VIEW -->
+<!-- ============================================== -->
+<div id="view-request-absen" class="app-view" style="display:none;">
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('admin-acc'); return false;">🔙 Kembali</a>
+        <div class="section-title">🕒 REQUEST ABSENSI</div>
+        <div id="absen-list-container" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+            <!-- Data dari script.js akan merender `.request-card` ke sini -->
+        </div>
+    </div>
+</div>
+
+<div id="view-request-medis" class="app-view" style="display:none;">
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('admin-acc'); return false;">🔙 Kembali</a>
+        <div class="section-title">🩺 REQUEST REKAM MEDIS</div>
+        <div id="medis-list-container" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+            <!-- Data dari script.js akan merender `.request-card` ke sini -->
+        </div>
+    </div>
+</div>
+
+<div id="view-request-izin" class="app-view" style="display:none;">
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('admin-acc'); return false;">🔙 Kembali</a>
+        <div class="section-title">📅 REQUEST IZIN CUTI</div>
+        <div id="izin-list-container" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+            <!-- Data dari script.js akan merender `.request-card` ke sini -->
+        </div>
+    </div>
+</div>
+
+<div id="view-request-akun" class="app-view" style="display:none;">
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('admin-acc'); return false;">🔙 Kembali</a>
+        <div class="section-title">👤 REQUEST AKUN BARU</div>
+        <div id="akun-list-container" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+            <!-- Data dari script.js akan merender `.request-card` ke sini -->
+        </div>
+    </div>
+</div>
+
+
+    <!-- ============================================== -->
+<!-- 1. HALAMAN LIVE UPDATE GAJI (YANG HILANG) -->
+<!-- ============================================== -->
+<div id="view-live-gaji" class="app-view" style="display:none;">
+    <header>
+        <div class="header-brand">
+            <div class="header-logo">M</div>
+            <div class="header-title">
+                <h1>Mayday Terminal</h1>
+                <p>Live Update Gaji</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('view-pilih-gaji')">Kembali</a>
+        <div class="section-title">📈 ESTIMASI GAJI MINGGU INI</div>
+        
+        <div class="loket-card" id="live-gaji-content">
+            <!-- JavaScript akan memuat rincian gaji live ke sini -->
+            <p style="text-align: center; color: #9CA3AF;">Menghitung kalkulasi gaji...</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 2. HALAMAN PENARIKAN GAJI V2 (SUDAH DILENGKAPI FORM) -->
+<!-- ============================================== -->
+<div id="view-penarikan-gaji-v2" class="app-view" style="display:none;">
+    <header>
+        <div class="header-brand">
+            <div class="header-logo">M</div>
+            <div class="header-title">
+                <h1>Mayday Terminal</h1>
+                <p>Penarikan Gaji</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('view-pilih-gaji')">Kembali</a>
+        <div class="section-title">🏧 PENARIKAN GAJI (PAYROLL)</div>
+
+        <!-- Rincian Gaji yang bisa ditarik -->
+        <div class="loket-card" id="penarikan-gaji-content">
+            <p style="text-align: center; color: #9CA3AF;">Memuat data payroll...</p>
+        </div>
+
+        <!-- Form Input Rekening -->
+        <div class="loket-card" style="margin-top: 15px;">
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-size: 12px; font-weight: bold; margin-bottom: 5px;">REKENING TUJUAN PENARIKAN</label>
+                <input type="text" id="input-rekening" class="form-input" placeholder="Contoh: BCA 123456 a/n Nama" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+                <p style="font-size: 11px; color: #e11d48; margin-top: 5px;">*Penarikan hanya bisa dilakukan hari Senin - Rabu.</p>
+            </div>
+            
+            <button id="btn-submit-payroll" class="btn-loket" style="width: 100%; margin: 0; background: #2563eb; color: white;">
+                AJUKAN PENARIKAN
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 3. ADMIN PAYROLL PANEL (SUDAH DILENGKAPI TABEL) -->
+<!-- ============================================== -->
+<div id="admin-payroll" class="app-view" style="display:none;">
+    <div class="content-area">
+        <a href="#" class="btn-back" onclick="show('view-admin'); return false;">🔙 Kembali</a>
+        <div class="section-title">💰 PENGAJUAN PENARIKAN GAJI</div>
+        
+        <div style="overflow-x: auto; margin-top: 15px; background: #fff; padding: 15px; border-radius: 10px;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 600px; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #eee;">
+                        <th style="padding: 10px;">Nama</th>
+                        <th style="padding: 10px;">Periode</th>
+                        <th style="padding: 10px;">Total</th>
+                        <th style="padding: 10px;">Rekening</th>
+                        <th style="padding: 10px;">Status</th>
+                        <th style="padding: 10px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-pengajuan-admin">
+                    <!-- Baris data admin akan dirender ke sini oleh JS -->
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 20px; color: #9CA3AF;">Memuat data pengajuan...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT TAMBAHAN UNTUK TOGGLE FORM REKAM MEDIS -->
+<script>
+    function bukaFormRekamMedis() {
+        document.getElementById('form-rekam-medis-ui').style.display = 'flex';
+    }
+    
+    function tutupFormRekamMedis() {
+        document.getElementById('form-rekam-medis-ui').style.display = 'none';
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="payroll-system.js"></script>
+<script src="payroll-ui.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
